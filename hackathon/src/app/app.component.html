@@ -25,3 +25,6 @@
 <ul *ngFor="let error of errors">
   <li>{{error | json}}</li>
 </ul>
+<app-output-image>
+  [image] = "webcamImage";
+</app-output-image>
