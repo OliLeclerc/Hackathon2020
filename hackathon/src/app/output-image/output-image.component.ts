@@ -8,7 +8,7 @@ import { ViewChild, ElementRef } from '@angular/core';
 })
 
 export class OutputImageComponent implements OnInit {
-  @ViewChild('imageContainer') dataContainer:ElementRef;
+  //@ViewChild('imageContainer') dataContainer:ElementRef;
 
   constructor() {
    }
