@@ -1,4 +1,3 @@
-<h1>Hello World!</h1>
  <div>
     <webcam [height]="500" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" *ngIf="showWebcam"
             [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
@@ -26,3 +25,8 @@
 <ul *ngFor="let error of errors">
   <li>{{error | json}}</li>
 </ul>
+<app-output-image>
+  [image] = "webcamImage";
+</app-output-image>
+
+
