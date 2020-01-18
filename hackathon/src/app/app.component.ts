@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
-import {WebcamImage, WebcamInitError, WebcamUtil} from 'ngx-webcam';
+import {WebcamImage, WebcamInitError} from 'ngx-webcam';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,6 @@ export class AppComponent {
   title = 'hackathon';
   public showWebcam = true;
   public allowCameraSwitch = true;
-  public multipleWebcamsAvailable = false;
   public deviceId: string;
   public videoOptions: MediaTrackConstraints = {
     // width: {ideal: 1024},
@@ -23,35 +22,23 @@ export class AppComponent {
   // latest snapshot
   public webcamImage: WebcamImage = null;
 
+  //Web Worker
+  public webWorker = new Worker("app.worker.ts")
+
+  // list of png
+  public imageList : Array<HTMLImageElement> = [] ;
+
   // webcam snapshot trigger
   private trigger: Subject<void> = new Subject<void>();
   // switch to next / previous / specific webcam; true/false: forward/backwards, string: deviceId
   private nextWebcam: Subject<boolean|string> = new Subject<boolean|string>();
 
-  public ngOnInit(): void {
-    WebcamUtil.getAvailableVideoInputs()
-      .then((mediaDevices: MediaDeviceInfo[]) => {
-        this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
-      });
-  }
-
   public triggerSnapshot(): void {
     this.trigger.next();
   }
 
-  public toggleWebcam(): void {
-    this.showWebcam = !this.showWebcam;
-  }
-
   public handleInitError(error: WebcamInitError): void {
     this.errors.push(error);
-  }
-
-  public showNextWebcam(directionOrDeviceId: boolean|string): void {
-    // true => move forward through devices
-    // false => move backwards through devices
-    // string => move to device with given deviceId
-    this.nextWebcam.next(directionOrDeviceId);
   }
 
   public handleImage(webcamImage: WebcamImage): void {
@@ -70,5 +57,11 @@ export class AppComponent {
 
   public get nextWebcamObservable(): Observable<boolean|string> {
     return this.nextWebcam.asObservable();
+  }
+
+  createImg(webcamImage: WebcamImage) {
+    let img: HTMLImageElement = new Image();
+    img.src = webcamImage.imageAsDataUrl;
+    this.imageList.push(img);
   }
 }
