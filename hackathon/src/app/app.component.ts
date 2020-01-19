@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
-import {WebcamImage, WebcamInitError} from 'ngx-webcam';
+import {WebcamImage} from 'ngx-webcam';
 import {ComputerVisionService} from "./computer-vision.service";
-import {HttpRequest} from "@angular/common/http";
 
 @Component({
   selector: 'app-root',
@@ -11,64 +10,67 @@ import {HttpRequest} from "@angular/common/http";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  //title of the app
   title = 'hackathon';
-  public showWebcam = true;
-  public allowCameraSwitch = true;
-  public deviceId: string;
-  public videoOptions: MediaTrackConstraints = {
-    // width: {ideal: 1024},
-    // height: {ideal: 576}
-  };
+  //Constructor to initialize the prediction component
   constructor(private computerVision: ComputerVisionService) {}
-
-  public errors: WebcamInitError[] = [];
-
-  // latest snapshot
+  // latest snapshot took by the webcam
   public webcamImage: WebcamImage = null;
-
-  //Web Worker
-  //public webWorker = new Worker("app.worker.ts")
-
-  // list of png
-  public imageList : Array<HTMLImageElement> = [] ;
-
   // webcam snapshot trigger
   private trigger: Subject<void> = new Subject<void>();
-  // switch to next / previous / specific webcam; true/false: forward/backwards, string: deviceId
-  private nextWebcam: Subject<boolean|string> = new Subject<boolean|string>();
+  private recording : boolean = false;
+
+  public record() {
+    this.recording = true;
+    if (typeof Worker !== 'undefined') {
+      // Create a new
+      const worker = new Worker('./web-worker.worker', { type: 'module' });
+      worker.onmessage = ({ data }) => {
+        if(this.recording){
+          this.triggerSnapshot();
+        }
+      };
+      worker.postMessage("WebCamTriggered");
+    } else {
+      // Web Workers are not supported in this environment.
+      // You should add a fallback so that your program still executes correctly.
+    }
+  }
+
+  public stopRecord(): void {
+    this.recording = false;
+  }
+
 
   public triggerSnapshot(): void {
     this.trigger.next();
-  }
-
-  public handleInitError(error: WebcamInitError): void {
-    this.errors.push(error);
+    this.createImg(this.webcamImage);
   }
 
   public handleImage(webcamImage: WebcamImage): void {
-    console.info('received webcam image', webcamImage);
+    console.info('received webcam image');
     this.webcamImage = webcamImage;
-  }
-
-  public cameraWasSwitched(deviceId: string): void {
-    console.log('active device: ' + deviceId);
-    this.deviceId = deviceId;
   }
 
   public get triggerObservable(): Observable<void> {
     return this.trigger.asObservable();
   }
 
-  public get nextWebcamObservable(): Observable<boolean|string> {
-    return this.nextWebcam.asObservable();
+  async createImg(webcamImage: WebcamImage) {
+    let blob = this.dataURItoBlob(webcamImage.imageAsDataUrl);
+    let yeet = await this.computerVision.predict(blob);
+    console.log(yeet);
   }
 
-  createImg(webcamImage: WebcamImage) {
-    let img: HTMLImageElement = new Image();
-    img.src = webcamImage.imageAsDataUrl;
-    this.imageList.push(img);
-
-    let yeet = this.computerVision.predict(img.src);
-    console.log(yeet);
+  dataURItoBlob(dataURI) {
+    let byteString = atob(dataURI.split(',')[1]);
+    let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    let ab = new ArrayBuffer(byteString.length);
+    let ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    let blob = new Blob([ab], {type: mimeString});
+    return blob;
   }
 }

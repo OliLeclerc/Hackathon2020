@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+// @ts-ignore
 import { PredictionAPIClient } from '@azure/cognitiveservices-customvision-prediction';
 
 @Injectable({
@@ -18,7 +19,7 @@ export class ComputerVisionService {
   constructor() {
     this.predictionKey = '0b6634daa04c4a50b1729a84c21f7194';
     this.predictionEndpoint = 'https://southcentralus.api.cognitive.microsoft.com/';
-    this.predictionName = 'Iteration5';
+    this.predictionName = 'Iteration7';
     this.predictionId = 'ed7680b9-9e10-4e05-82de-9e4fde6b89cf';
     this.predictor = new PredictionAPIClient(this.predictionKey, this.predictionEndpoint);
   }
