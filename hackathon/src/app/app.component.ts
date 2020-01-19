@@ -45,7 +45,6 @@ export class AppComponent {
   }
 
   public handleImage(webcamImage: WebcamImage): void {
-    console.info('received webcam image');
     this.webcamImage = webcamImage;
   }
 
@@ -56,7 +55,6 @@ export class AppComponent {
   async createImg(webcamImage: WebcamImage) {
     let blob = this.dataURItoBlob(webcamImage.imageAsDataUrl);
     let yeet = await this.computerVision.predict(blob);
-    console.log(yeet);
     this.drawYeet.draw(yeet);
   }
 

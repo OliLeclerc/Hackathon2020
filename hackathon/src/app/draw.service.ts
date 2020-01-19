@@ -10,13 +10,13 @@ export class DrawService {
 
     let svgElem = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svgElem.setAttribute('width', '650');
-    svgElem.setAttribute('height', '500');
+    svgElem.setAttribute('height', '700');
     let svgNS = svgElem.namespaceURI;
 
     for (let i=0; i<predictions.length; i++){
       let w = 650 * predictions[i]["boundingBox"]["width"] as unknown;
       let x = 650 * (1 - predictions[i]["boundingBox"]["left"] - predictions[i]["boundingBox"]["width"]) as unknown;
-      let y = 500 * predictions[i]["boundingBox"]["top"] as unknown;
+      let y = ((500 * predictions[i]["boundingBox"]["top"]) as number + 120) as unknown;
       let h = 500 * predictions[i]["boundingBox"]["height"] as unknown;
       let tag = predictions[i]["tagName"] as unknown;
 
