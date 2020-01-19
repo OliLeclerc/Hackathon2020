@@ -55,9 +55,6 @@ export class DrawService {
     console.log(svg);
     svg.appendChild(svgElem);
 
-
-    let coordinates = [];
-
   }
 
 }
