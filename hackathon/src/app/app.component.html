@@ -1,22 +1,13 @@
 <h2>Mets du respect dans ton bac</h2>
 
-<div>
-   <webcam [height]="500" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" *ngIf="showWebcam"
-           [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
-           [videoOptions]="videoOptions"
-           [imageQuality]="1"
-           (cameraSwitched)="cameraWasSwitched($event)"
-           (initError)="handleInitError($event)"
-   ></webcam>
-   <br/>
-  <button class="actionBtn" (click)="triggerSnapshot();createImg(webcamImage);">Take A Snapshot</button>
-</div>
+<webcam [height]="" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" [imageQuality]="1"></webcam>
+<br/>
+<button class="actionBtn" (click)="triggerSnapshot();">Start recording</button>
+<br/>
+<img id="image" *ngIf="webcamImage" [src]="webcamImage.imageAsDataUrl"/>
 
-<div class="coucou" *ngIf="imageList">
-  <div *ngFor="let product of imageList">
-    <h2>{{ product.src }}</h2>
 
-    <br/>
-    <img id="image" [src]="product.src"/>
-  </div>
-</div>
+
+
+
+
