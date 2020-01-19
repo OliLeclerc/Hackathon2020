@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 <h2>Mets du respect dans ton bac</h2>
 
->>>>>>> origin/charlie
 <div>
    <webcam [height]="500" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" *ngIf="showWebcam"
            [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
@@ -23,16 +20,9 @@
     <img id="image" [src]="product.src"/>
   </div>
 </div>
-<<<<<<< HEAD
 
-<h4 *ngIf="errors.length > 0">Messages:</h4>
-<ul *ngFor="let error of errors">
-  <li>{{error | json}}</li>
-</ul>
 <app-output-image>
   [image] = "webcamImage";
 </app-output-image>
 
 
-=======
->>>>>>> origin/charlie
