@@ -14,7 +14,7 @@ export class AppComponent {
   //title of the app
   title = 'hackathon';
   //Constructor to initialize the prediction component
-  constructor(private computerVision: ComputerVisionService) {}
+  constructor(private computerVision: ComputerVisionService, private drawYeet: DrawService) {}
   // latest snapshot took by the webcam
   public webcamImage: WebcamImage = null;
 
@@ -53,6 +53,7 @@ export class AppComponent {
     let blob = this.dataURItoBlob(webcamImage.imageAsDataUrl);
     let yeet = await this.computerVision.predict(blob);
     console.log(yeet);
+    this.drawYeet.draw(yeet);
   }
 
   dataURItoBlob(dataURI) {

@@ -1,17 +1,7 @@
-<h2>Mets du respect dans ton bac</h2>
-
-<webcam [height]="" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" [imageQuality]="1"></webcam>
+<webcam [height]="" [width]="650" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" [imageQuality]="1"></webcam>
 <br/>
 <button class="actionBtn" (click)="triggerSnapshot();">Start recording</button>
 <br/>
 <img id="image" *ngIf="webcamImage" [src]="webcamImage.imageAsDataUrl"/>
 
-<h4 *ngIf="errors.length > 0">Messages:</h4>
-<ul *ngFor="let error of errors">
-  <li>{{error | json}}</li>
-</ul>
-<app-output-image>
-  [image] = "webcamImage";
-</app-output-image>
-
-<div id="svgContainer"></div>
+<div class = "floatTL" id="svgContainer"></div>
