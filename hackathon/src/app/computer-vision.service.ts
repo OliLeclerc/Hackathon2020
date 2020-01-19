@@ -16,6 +16,6 @@ export class ComputerVisionService {
   }
 
   predict(imageUrl: string) {
-    this.predictor.detectImageUrl(this.predictionId, this.predictionName, imageUrl);
+    //this.predictor.detectImageUrl(this.predictionId, this.predictionName, imageUrl);
   }
 }
