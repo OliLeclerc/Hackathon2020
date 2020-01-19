@@ -25,7 +25,7 @@ export class ComputerVisionService {
 
   // url exemple :  https://media1.ledevoir.com/images_galerie/nwd_721247_562241/image.jpg
   async predict(imageData) {
-    let yeetableboiii = await this.predictor.detectImageWithNoStore(this.predictionId, this.predictionName, imageData);
+    let yeetableboiii = await this.predictor.detectImageUrlWithNoStore(this.predictionId, this.predictionName, { url:imageData});
     return yeetableboiii.predictions;
   }
 }
