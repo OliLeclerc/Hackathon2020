@@ -1,23 +1,9 @@
+<app-top-bar></app-top-bar>
 <webcam [height]="" [width]="650" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" [imageQuality]="1"></webcam>
 <br/>
+<app-side-info></app-side-info>
 <button class="actionBtn" (click)="record();">Start recording</button>
 <br/>
 <button class="actionBtn" (click)="stopRecord();">Stop recording</button>
 <br/>
-<img id="image" *ngIf="webcamImage" [src]="webcamImage.imageAsDataUrl"/>
-    <br/>
-    <img id="image" [src]="product.src"/>
-  </div>
-</div>
-
-<app-output-image>
-  [image] = "webcamImage";
-</app-output-image>
-
-
-=======
 <div class = "floatTL" id="svgContainer"></div>
->>>>>>> origin/charles
-=======
-<div class = "floatTL" id="svgContainer"></div>
->>>>>>> origin/master

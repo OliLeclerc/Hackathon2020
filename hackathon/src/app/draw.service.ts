@@ -20,10 +20,10 @@ export class DrawService {
       let h = 500 * predictions[i]["boundingBox"]["height"] as unknown;
       let tag = predictions[i]["tagName"] as unknown;
 
-      let s1 = x as string; 
-      let s2 = y as string; 
-      let s3 = w as string; 
-      let s4 = h as string; 
+      let s1 = x as string;
+      let s2 = y as string;
+      let s3 = w as string;
+      let s4 = h as string;
 
       if (predictions[i]["probability"] >= 0.70){
         let rect = document.createElementNS(svgNS,'rect');
@@ -37,11 +37,11 @@ export class DrawService {
 
         console.log(tag)
         if(tag == "bouteille")
-          rect.setAttribute('stroke', 'green');
+          rect.setAttribute('stroke', 'purple');
         else if (tag == "cannette")
           rect.setAttribute('stroke', 'blue');
         else if (tag == "chips")
-          rect.setAttribute('stroke', 'purple');
+          rect.setAttribute('stroke', 'red');
 
         svgElem.appendChild(rect);
       }
