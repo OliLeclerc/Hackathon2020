@@ -3,6 +3,7 @@ import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {WebcamImage, WebcamInitError, WebcamUtil} from 'ngx-webcam';
 import { DrawService } from './draw.service';
+import {ComputerVisionService} from "./computer-vision.service";
 
 @Component({
   selector: 'app-root',
@@ -10,68 +11,59 @@ import { DrawService } from './draw.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  //title of the app
   title = 'hackathon';
-  public showWebcam = true;
-  public allowCameraSwitch = true;
-  public multipleWebcamsAvailable = false;
-  public deviceId: string;
-  public videoOptions: MediaTrackConstraints = {
-    // width: {ideal: 1024},
-    // height: {ideal: 576}
-  };
-  public errors: WebcamInitError[] = [];
-
-  // latest snapshot
+  //Constructor to initialize the prediction component
+  constructor(private computerVision: ComputerVisionService) {}
+  // latest snapshot took by the webcam
   public webcamImage: WebcamImage = null;
-
-  constructor(private drawService: DrawService) { }
 
   // webcam snapshot trigger
   private trigger: Subject<void> = new Subject<void>();
-  // switch to next / previous / specific webcam; true/false: forward/backwards, string: deviceId
-  private nextWebcam: Subject<boolean|string> = new Subject<boolean|string>();
+  private w;
 
-  public ngOnInit(): void {
-    WebcamUtil.getAvailableVideoInputs()
-      .then((mediaDevices: MediaDeviceInfo[]) => {
-        this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
-      });
+  public record(): void {
+    if(typeof(Worker) !== "undefined") {
+      if(typeof(this.w) == "undefined") {
+        this.w = new Worker("app.worker.js");
+      }
+      this.w.onmessage = function(event) {
+        this.triggerSnapshot();
+      };
+    } else {
+      console.log("Sorry, your browser does not support Web Workers...");
+    }
   }
 
   public triggerSnapshot(): void {
     this.trigger.next();
-  }
-
-  public toggleWebcam(): void {
-    this.showWebcam = !this.showWebcam;
-  }
-
-  public handleInitError(error: WebcamInitError): void {
-    this.errors.push(error);
-  }
-
-  public showNextWebcam(directionOrDeviceId: boolean|string): void {
-    // true => move forward through devices
-    // false => move backwards through devices
-    // string => move to device with given deviceId
-    this.nextWebcam.next(directionOrDeviceId);
+    this.createImg(this.webcamImage);
   }
 
   public handleImage(webcamImage: WebcamImage): void {
-    console.info('received webcam image', webcamImage);
+    console.info('received webcam image');
     this.webcamImage = webcamImage;
-  }
-
-  public cameraWasSwitched(deviceId: string): void {
-    console.log('active device: ' + deviceId);
-    this.deviceId = deviceId;
   }
 
   public get triggerObservable(): Observable<void> {
     return this.trigger.asObservable();
   }
 
-  public get nextWebcamObservable(): Observable<boolean|string> {
-    return this.nextWebcam.asObservable();
+  async createImg(webcamImage: WebcamImage) {
+    let blob = this.dataURItoBlob(webcamImage.imageAsDataUrl);
+    let yeet = await this.computerVision.predict(blob);
+    console.log(yeet);
+  }
+
+  dataURItoBlob(dataURI) {
+    let byteString = atob(dataURI.split(',')[1]);
+    let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    let ab = new ArrayBuffer(byteString.length);
+    let ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    let blob = new Blob([ab], {type: mimeString});
+    return blob;
   }
 }
