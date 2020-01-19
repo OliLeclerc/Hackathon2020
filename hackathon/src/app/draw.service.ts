@@ -36,14 +36,20 @@ export class DrawService {
         rect.setAttribute('stroke-width', '4px');
 
         console.log(tag)
+        let predictionColor = null;
         if(tag == "bouteille")
-          rect.setAttribute('stroke', 'green');
+          predictionColor = 'green';
         else if (tag == "cannette")
-          rect.setAttribute('stroke', 'blue');
+          predictionColor = 'blue';
         else if (tag == "chips")
-          rect.setAttribute('stroke', 'purple');
+          predictionColor = 'purple';
 
+        rect.setAttribute('stroke', predictionColor);
         svgElem.appendChild(rect);
+
+        let textbox = document.createTextNode(tag as string);
+        svgElem.appendChild(textbox);
+        
       }
 
     }
