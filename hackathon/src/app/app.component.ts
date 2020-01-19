@@ -65,16 +65,10 @@ export class AppComponent {
 
   createImg(webcamImage: WebcamImage) {
     let img: HTMLImageElement = new Image();
-    img.src = webcamImage.imageAsBase64;
+    img.src = webcamImage.imageAsDataUrl;
     this.imageList.push(img);
-    let canvas = document.createElement('canvas');
-    canvas.height = webcamImage.imageData.height;
-    canvas.width = webcamImage.imageData.width;
-    canvas.getContext('2d').drawImage(img, 0, 0);
-    let img2 = document.createElement('img');
-    img2.src = canvas.toDataURL();
 
-    let yeet = this.computerVision.predict(img2.src);
+    let yeet = this.computerVision.predict(img.src);
     console.log(yeet);
   }
 }
