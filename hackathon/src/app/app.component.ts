@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
-import {WebcamImage} from 'ngx-webcam';
+import {WebcamImage, WebcamInitError, WebcamUtil} from 'ngx-webcam';
+import { DrawService } from './draw.service';
 import {ComputerVisionService} from "./computer-vision.service";
 
 @Component({
@@ -13,24 +14,30 @@ export class AppComponent {
   //title of the app
   title = 'hackathon';
   //Constructor to initialize the prediction component
-  constructor(private computerVision: ComputerVisionService) {}
+  constructor(private computerVision: ComputerVisionService, private drawYeet: DrawService) {}
   // latest snapshot took by the webcam
   public webcamImage: WebcamImage = null;
   // webcam snapshot trigger
   private trigger: Subject<void> = new Subject<void>();
+  //boolean to know if we are recording 
   private recording : boolean = false;
+  //boolean to know if we already started the working thread
+  private workStarted : boolean = false
 
   public record() {
     this.recording = true;
     if (typeof Worker !== 'undefined') {
       // Create a new
-      const worker = new Worker('./web-worker.worker', { type: 'module' });
-      worker.onmessage = ({ data }) => {
-        if(this.recording){
-          this.triggerSnapshot();
-        }
-      };
-      worker.postMessage("WebCamTriggered");
+      if(!this.workStarted){
+        const worker = new Worker('./web-worker.worker', { type: 'module' });
+        this.workStarted = true 
+        worker.onmessage = ({ data }) => {
+          if(this.recording){
+            this.triggerSnapshot();
+          }
+        };
+        worker.postMessage("WebCamTriggered"); 
+      }
     } else {
       // Web Workers are not supported in this environment.
       // You should add a fallback so that your program still executes correctly.
@@ -60,6 +67,7 @@ export class AppComponent {
     let blob = this.dataURItoBlob(webcamImage.imageAsDataUrl);
     let yeet = await this.computerVision.predict(blob);
     console.log(yeet);
+    this.drawYeet.draw(yeet);
   }
 
   dataURItoBlob(dataURI) {
