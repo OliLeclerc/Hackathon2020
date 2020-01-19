@@ -1,6 +1,8 @@
 <webcam [height]="" [width]="650" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" [imageQuality]="1"></webcam>
 <br/>
-<button class="actionBtn" (click)="triggerSnapshot();">Start recording</button>
+<button class="actionBtn" (click)="record();">Start recording</button>
+<br/>
+<button class="actionBtn" (click)="stopRecord();">Stop recording</button>
 <br/>
 <img id="image" *ngIf="webcamImage" [src]="webcamImage.imageAsDataUrl"/>
 
