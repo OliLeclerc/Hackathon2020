@@ -32,7 +32,7 @@ export class AppComponent {
   private trigger: Subject<void> = new Subject<void>();
   // switch to next / previous / specific webcam; true/false: forward/backwards, string: deviceId
   private nextWebcam: Subject<boolean|string> = new Subject<boolean|string>();
-
+  
   public triggerSnapshot(): void {
     this.trigger.next();
   }
