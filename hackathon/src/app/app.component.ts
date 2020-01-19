@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {WebcamImage, WebcamInitError} from 'ngx-webcam';
+import {ComputerVisionService} from "./computer-vision.service";
+import {HttpRequest} from "@angular/common/http";
 
 @Component({
   selector: 'app-root',
@@ -17,13 +19,15 @@ export class AppComponent {
     // width: {ideal: 1024},
     // height: {ideal: 576}
   };
+  constructor(private computerVision: ComputerVisionService) {}
+
   public errors: WebcamInitError[] = [];
 
   // latest snapshot
   public webcamImage: WebcamImage = null;
 
   //Web Worker
-  public webWorker = new Worker("app.worker.ts")
+  //public webWorker = new Worker("app.worker.ts")
 
   // list of png
   public imageList : Array<HTMLImageElement> = [] ;
@@ -32,7 +36,7 @@ export class AppComponent {
   private trigger: Subject<void> = new Subject<void>();
   // switch to next / previous / specific webcam; true/false: forward/backwards, string: deviceId
   private nextWebcam: Subject<boolean|string> = new Subject<boolean|string>();
-  
+
   public triggerSnapshot(): void {
     this.trigger.next();
   }
@@ -61,7 +65,16 @@ export class AppComponent {
 
   createImg(webcamImage: WebcamImage) {
     let img: HTMLImageElement = new Image();
-    img.src = webcamImage.imageAsDataUrl;
+    img.src = webcamImage.imageAsBase64;
     this.imageList.push(img);
+    let canvas = document.createElement('canvas');
+    canvas.height = webcamImage.imageData.height;
+    canvas.width = webcamImage.imageData.width;
+    canvas.getContext('2d').drawImage(img, 0, 0);
+    let img2 = document.createElement('img');
+    img2.src = canvas.toDataURL();
+
+    let yeet = this.computerVision.predict(img2.src);
+    console.log(yeet);
   }
 }
