@@ -18,20 +18,29 @@ export class AppComponent {
   public webcamImage: WebcamImage = null;
   // webcam snapshot trigger
   private trigger: Subject<void> = new Subject<void>();
-  private w;
+  private recording : boolean = false;
 
-  public record(): void {
-    if(typeof(Worker) !== "undefined") {
-      if(typeof(this.w) == "undefined") {
-        this.w = new Worker("app.worker.js");
-      }
-      this.w.onmessage = function(event) {
-        this.triggerSnapshot();
+  public record() {
+    this.recording = true;
+    if (typeof Worker !== 'undefined') {
+      // Create a new
+      const worker = new Worker('./web-worker.worker', { type: 'module' });
+      worker.onmessage = ({ data }) => {
+        if(this.recording){
+          this.triggerSnapshot();
+        }
       };
+      worker.postMessage("WebCamTriggered");
     } else {
-      console.log("Sorry, your browser does not support Web Workers...");
+      // Web Workers are not supported in this environment.
+      // You should add a fallback so that your program still executes correctly.
     }
   }
+
+  public stopRecord(): void {
+    this.recording = false;
+  }
+
 
   public triggerSnapshot(): void {
     this.trigger.next();
