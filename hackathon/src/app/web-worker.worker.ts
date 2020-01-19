@@ -5,5 +5,5 @@ addEventListener('message', ({ data }) => {
     function (){
       const response = `worker response to ${data}`;
       postMessage(response);},
-    200)
+    150)
 });

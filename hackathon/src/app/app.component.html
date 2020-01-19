@@ -1,6 +1,6 @@
 <h2>Mets du respect dans ton bac</h2>
 
-<webcam [height]="" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" [imageQuality]="1"></webcam>
+<webcam [height]="500" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" [imageQuality]="1"></webcam>
 <br/>
 <button class="actionBtn" (click)="record();">Start recording</button>
 <br/>
@@ -13,16 +13,3 @@
 
 
 
-<<<<<<< HEAD
-    <br/>
-    <img id="image" [src]="product.src"/>
-  </div>
-</div>
-
-<app-output-image>
-  [image] = "webcamImage";
-</app-output-image>
-
-
-=======
->>>>>>> origin/charlie
