@@ -19,7 +19,7 @@ export class AppComponent {
   public webcamImage: WebcamImage = null;
   // webcam snapshot trigger
   private trigger: Subject<void> = new Subject<void>();
-  //boolean to know if we are recording 
+  //boolean to know if we are recording
   private recording : boolean = false;
   //boolean to know if we already started the working thread
   private workStarted : boolean = false
@@ -30,13 +30,13 @@ export class AppComponent {
       // Create a new
       if(!this.workStarted){
         const worker = new Worker('./web-worker.worker', { type: 'module' });
-        this.workStarted = true 
+        this.workStarted = true
         worker.onmessage = ({ data }) => {
-          if(this.recording){
+          if (this.recording){
             this.triggerSnapshot();
           }
         };
-        worker.postMessage("WebCamTriggered"); 
+        worker.postMessage('WebCamTriggered');
       }
     } else {
       // Web Workers are not supported in this environment.
