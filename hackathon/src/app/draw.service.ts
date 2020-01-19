@@ -62,11 +62,11 @@ export class DrawService {
         console.log(tag)
 
         if(tag == "bouteille"){
-          rect.setAttribute('stroke', 'purple');
-          label.setAttribute('fill', 'purple')
-        }else if (tag == "cannette"){
           rect.setAttribute('stroke', 'blue');
           label.setAttribute('fill', 'blue')
+        }else if (tag == "cannette"){
+          rect.setAttribute('stroke', 'purple');
+          label.setAttribute('fill', 'purple')
         }else if (tag == "chips"){
           rect.setAttribute('stroke', 'red');
           label.setAttribute('fill', 'red')
