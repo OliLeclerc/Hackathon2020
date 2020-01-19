@@ -11,7 +11,9 @@ import { ActivatedRoute } from '@angular/router';
 
 export class OutputImageComponent implements OnInit {
 
-  constructor(private drawService: DrawService) { }
+  constructor(private drawService: DrawService) {
+    this.drawService = drawService;
+   }
 
   ngOnInit() {
     this.drawService.draw(null);
