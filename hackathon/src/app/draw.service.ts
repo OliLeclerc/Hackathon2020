@@ -24,6 +24,7 @@ export class DrawService {
       let s2 = y as string;
       let s3 = w as string;
       let s4 = h as string;
+<<<<<<< HEAD
 
       let labelX = ((x as number) + (w as number) / 15 * 14) as unknown as string;
       let labelY = ((y as number) + (h as number) / 15 * 1) as unknown as string;
@@ -32,6 +33,8 @@ export class DrawService {
 
       let textX = ((labelX as unknown as number) + 15 ) as unknown as string;
       let textY = ((labelY as unknown as number) + 27 ) as unknown as string;
+=======
+>>>>>>> origin/pe
 
       if (predictions[i]["probability"] >= 0.70){
         let rect = document.createElementNS(svgNS,'rect');
@@ -60,9 +63,10 @@ export class DrawService {
         text.textContent = tag as string;
 
         console.log(tag)
+
         if(tag == "bouteille"){
-          rect.setAttribute('stroke', 'green');
-          label.setAttribute('fill', 'green')
+          rect.setAttribute('stroke', 'purple');
+          label.setAttribute('fill', 'purple')
         }else if (tag == "cannette"){
           rect.setAttribute('stroke', 'blue');
           label.setAttribute('fill', 'blue')
