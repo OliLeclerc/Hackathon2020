@@ -19,35 +19,25 @@ export class AppComponent {
   public webcamImage: WebcamImage = null;
   // webcam snapshot trigger
   private trigger: Subject<void> = new Subject<void>();
-  //boolean to know if we are recording 
+  //boolean to know if we are recording
   private recording : boolean = false;
   //boolean to know if we already started the working thread
   private workStarted : boolean = false
 
   public record() {
-    this.recording = true;
     if (typeof Worker !== 'undefined') {
       // Create a new
-      if(!this.workStarted){
-        const worker = new Worker('./web-worker.worker', { type: 'module' });
-        this.workStarted = true 
-        worker.onmessage = ({ data }) => {
-          if(this.recording){
-            this.triggerSnapshot();
-          }
-        };
-        worker.postMessage("WebCamTriggered"); 
-      }
+      const worker = new Worker('./web-worker.worker', { type: 'module' });
+       this.workStarted = true
+       worker.onmessage = ({ data }) => {
+           this.triggerSnapshot();
+       };
+       worker.postMessage('WebCamTriggered');
     } else {
       // Web Workers are not supported in this environment.
       // You should add a fallback so that your program still executes correctly.
     }
   }
-
-  public stopRecord(): void {
-    this.recording = false;
-  }
-
 
   public triggerSnapshot(): void {
     this.trigger.next();
@@ -81,4 +71,9 @@ export class AppComponent {
     let blob = new Blob([ab], {type: mimeString});
     return blob;
   }
+
+  ngOnInit(){
+    this.record();
+  }
+
 }
