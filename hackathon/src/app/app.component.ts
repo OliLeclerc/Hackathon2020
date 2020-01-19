@@ -24,6 +24,8 @@ export class AppComponent {
   // latest snapshot
   public webcamImage: WebcamImage = null;
 
+  constructor(private drawService: DrawService) { }
+
   // webcam snapshot trigger
   private trigger: Subject<void> = new Subject<void>();
   // switch to next / previous / specific webcam; true/false: forward/backwards, string: deviceId
